@@ -1,6 +1,5 @@
 package {{.pkg}}
 {{.imports}}
-{{.vars}}
 {{.types}}
 {{.new}}
 {{.insert}}

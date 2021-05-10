@@ -1,7 +1,7 @@
 
 type (
 	{{.upperStartCamelObject}}Model struct {
-		{{if .withCache}}sqlc.CachedConn{{else}}conn sqlx.SqlConn{{end}}
+		{{if .withCache}}}conn *mysql.DataSource{{else}}conn *mysql.DataSource{{end}}
 		table string
 	}
 
@@ -9,3 +9,6 @@ type (
 		{{.fields}}
 	}
 )
+
+
+
