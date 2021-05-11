@@ -4,6 +4,13 @@ func (m *{{.upperStartCamelObject}}Model)FindOne({{.lowerStartCamelPrimaryKey}} 
 	return
 }
 
+func (m *{{.upperStartCamelObject}}Model) FindInBatches(ids []int64) (resp []*{{.upperStartCamelObject}}, err error) {
+	resp = make([]*{{.upperStartCamelObject}}, 0)
+	err = m.conn.GetEngine().Model(&{{.upperStartCamelObject}}{}).Where("`id` IN ?", ids).Find(&resp).Error
+	return
+}
+
+
 
 func (m *{{.upperStartCamelObject}}Model) Query(filters map[string]interface{}, sort []*model.SortSpec, limit int) (bean []*{{.upperStartCamelObject}}, err error) {
 	bean = make([]*{{.upperStartCamelObject}}, 0)
@@ -22,7 +29,7 @@ func (m *{{.upperStartCamelObject}}Model) Query(filters map[string]interface{}, 
 	if err != nil {
 		return
 	}
-	sess := m.conn.GetEngine().Model(&{{.upperStartCamelObject}}{}).Where(cond, values).Limit(limit)
+	sess := m.conn.GetEngine().Model(&{{.upperStartCamelObject}}{}).Where(cond, values...).Limit(limit)
 	if sorts != nil {
 		for _, s := range sorts {
 			sess = sess.Order(s)
@@ -50,7 +57,7 @@ func (m *{{.upperStartCamelObject}}Model)Page(query *model.PageQuery, bean []*{{
 	if err != nil {
 		return
 	}
-	sess := m.conn.GetEngine().Model(&{{.upperStartCamelObject}}{}).Where(cond, values).Limit(limit).Offset(offset)
+	sess := m.conn.GetEngine().Model(&{{.upperStartCamelObject}}{}).Where(cond, values...).Limit(limit).Offset(offset)
 	if sorts != nil {
 		for _, s := range sorts {
 			sess = sess.Order(s)
@@ -87,7 +94,7 @@ func (m *{{.upperStartCamelObject}}Model) Cursor(query *model.CursorQuery, bean 
 	}
 	var orderBy string
 
-	sess := m.conn.GetEngine().Model(&{{.upperStartCamelObject}}{}).Where(cond,values).Limit(int(query.Size) + 1)
+	sess := m.conn.GetEngine().Model(&{{.upperStartCamelObject}}{}).Where(cond,values...).Limit(int(query.Size) + 1)
 
 	if query.Direction == 0 {
 		for _, k := range query.CursorSort {

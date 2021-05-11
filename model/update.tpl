@@ -5,3 +5,14 @@ func (m *{{.upperStartCamelObject}}Model)UpdateByMap({{.lowerStartCamelPrimaryKe
 }
 
 
+
+
+func (m *{{.upperStartCamelObject}}Model) UpdateById(id int64, data *{{.upperStartCamelObject}}) (err error) {
+	err = m.conn.GetEngine().Model(&{{.upperStartCamelObject}}{}).Where("`id` = ?", id).Updates(data).Error
+	return
+}
+
+func (m *{{.upperStartCamelObject}}Model) Update( data *{{.upperStartCamelObject}}) (err error) {
+	err = m.conn.GetEngine().Model(&{{.upperStartCamelObject}}{}).Updates(data).Error
+	return
+}
