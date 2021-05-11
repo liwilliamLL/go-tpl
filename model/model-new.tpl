@@ -2,7 +2,7 @@
 
 
 func (t *{{.upperStartCamelObject}}) TableName() string{
-	return "{{.table}}"
+	return "{{.originTable}}"
 }
 
 
