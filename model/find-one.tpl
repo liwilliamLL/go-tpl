@@ -81,6 +81,8 @@ func (m *{{.upperStartCamelObject}}Model)Page(query *model.PageQuery, bean []*{{
 	return
 }
 
+
+{{if .status}}
 func (m *{{.upperStartCamelObject}}Model) Cursor(query *model.CursorQuery, bean []*{{.upperStartCamelObject}}) (cursor *model.Cursor, err error) {
 	bean = make([]*{{.upperStartCamelObject}},0)
 	columns, err := mysql.GetTableColumns(m.conn, bean)
@@ -167,5 +169,5 @@ func (m *{{.upperStartCamelObject}}Model) Cursor(query *model.CursorQuery, bean 
 	}
 	return
 }
-
+{{end}}
 

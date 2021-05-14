@@ -3,6 +3,6 @@ import (
 	"erp-server/lib/model"
 	"erp-server/lib/provider/mysql"
 	"erp-server/lib/xerr"
-	"fmt"
+	{{if .status}}"fmt"{{end}}
 	{{if .time}}"time"{{end}}
 )
