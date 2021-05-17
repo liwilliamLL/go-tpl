@@ -40,8 +40,10 @@ func (m *{{.upperStartCamelObject}}Model) Query(filters map[string]interface{}, 
 }
 
 
-func (m *{{.upperStartCamelObject}}Model)Page(query *model.PageQuery, bean []*{{.upperStartCamelObject}}) (page *model.Page, err error) {
-	bean = make([]*{{.upperStartCamelObject}},0)
+func (m *{{.upperStartCamelObject}}Model)Page(query *model.PageQuery, bean *[]*{{.upperStartCamelObject}}) (page *model.Page, err error) {
+	if bean ==nil{
+		bean = &[]*{{.upperStartCamelObject}}{}
+	}
 	columns, err := mysql.GetTableColumns(m.conn, bean)
 	if err != nil {
 		return
@@ -83,8 +85,10 @@ func (m *{{.upperStartCamelObject}}Model)Page(query *model.PageQuery, bean []*{{
 
 
 {{if .status}}
-func (m *{{.upperStartCamelObject}}Model) Cursor(query *model.CursorQuery, bean []*{{.upperStartCamelObject}}) (cursor *model.Cursor, err error) {
-	bean = make([]*{{.upperStartCamelObject}},0)
+func (m *{{.upperStartCamelObject}}Model) Cursor(query *model.CursorQuery, bean *[]*{{.upperStartCamelObject}}) (cursor *model.Cursor, err error) {
+	if bean ==nil{
+		bean = &[]*{{.upperStartCamelObject}}{}
+	}
 	columns, err := mysql.GetTableColumns(m.conn, bean)
 
 	if err != nil {
@@ -109,7 +113,8 @@ func (m *{{.upperStartCamelObject}}Model) Cursor(query *model.CursorQuery, bean 
 				orderBy = fmt.Sprintf("%s %s", k.Property, "ASC")
 
 			default:
-				orderBy = fmt.Sprintf("%s %s", k.Property, "DESC")
+				orderBy = fmt.Sprintf("%s %s", 
+				k.Property, "DESC")
 
 			}
 			sess = sess.Order(orderBy)
