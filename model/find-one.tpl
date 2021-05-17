@@ -150,7 +150,7 @@ func (m *{{.upperStartCamelObject}}Model) Cursor(query *model.CursorQuery, bean 
 	var maxId int64 = 0
 	var minId int64 = 9223372036854775807
 
-	for _, k := range bean {
+	for _, k := range *bean {
 		if k.{{.uperStartCamelPrimaryKey}} < minId {
 			minId = k.{{.uperStartCamelPrimaryKey}}
 		}
@@ -160,7 +160,7 @@ func (m *{{.upperStartCamelObject}}Model) Cursor(query *model.CursorQuery, bean 
 	}
 
 	var hasMore bool
-	if int32(len(bean)) > query.Size {
+	if int32(len(*bean)) > query.Size {
 		hasMore = true
 	}
 
