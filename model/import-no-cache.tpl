@@ -1,5 +1,5 @@
 import (
-	"database/sql"
+	{{if .sql}}"database/sql"{{end}}
 	"erp-server/lib/model"
 	"erp-server/lib/provider/mysql"
 	"erp-server/lib/xerr"
