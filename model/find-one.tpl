@@ -10,7 +10,21 @@ func (m *{{.upperStartCamelObject}}Model) FindInBatches(ids []int64) (resp []*{{
 	return
 }
 
+func (m *DicCityModel) Count(filters map[string]interface{}) (count int64, err error) {
+	bean := make([]*{{.upperStartCamelObject}}, 0)
+	columns, err := mysql.GetTableColumns(m.conn, bean)
+	if err != nil {
+		return
+	}
 
+	cond, values, err := mysql.BuildWhere(filters, columns)
+	if err != nil {
+		return
+	}
+
+	err = m.conn.GetEngine().Model(&{{.upperStartCamelObject}}{}).Where(cond, values...).Count(&count).Error
+	return
+}
 
 func (m *{{.upperStartCamelObject}}Model) Query(filters map[string]interface{}, sort []*model.SortSpec, limit int) (bean []*{{.upperStartCamelObject}}, err error) {
 	bean = make([]*{{.upperStartCamelObject}}, 0)
