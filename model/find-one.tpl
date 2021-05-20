@@ -40,8 +40,10 @@ func (m *{{.upperStartCamelObject}}Model) Query(filters map[string]interface{}, 
 }
 
 
-func (m *{{.upperStartCamelObject}}Model)Page(query *model.PageQuery, bean []*{{.upperStartCamelObject}}) (page *model.Page, err error) {
-	bean = make([]*{{.upperStartCamelObject}},0)
+func (m *{{.upperStartCamelObject}}Model)Page(query *model.PageQuery, bean *[]*{{.upperStartCamelObject}}) (page *model.Page, err error) {
+	if bean ==nil{
+		bean = &[]*{{.upperStartCamelObject}}{}
+	}
 	columns, err := mysql.GetTableColumns(m.conn, bean)
 	if err != nil {
 		return
@@ -81,8 +83,12 @@ func (m *{{.upperStartCamelObject}}Model)Page(query *model.PageQuery, bean []*{{
 	return
 }
 
-func (m *{{.upperStartCamelObject}}Model) Cursor(query *model.CursorQuery, bean []*{{.upperStartCamelObject}}) (cursor *model.Cursor, err error) {
-	bean = make([]*{{.upperStartCamelObject}},0)
+
+{{if .status}}
+func (m *{{.upperStartCamelObject}}Model) Cursor(query *model.CursorQuery, bean *[]*{{.upperStartCamelObject}}) (cursor *model.Cursor, err error) {
+	if bean ==nil{
+		bean = &[]*{{.upperStartCamelObject}}{}
+	}
 	columns, err := mysql.GetTableColumns(m.conn, bean)
 
 	if err != nil {
@@ -107,7 +113,8 @@ func (m *{{.upperStartCamelObject}}Model) Cursor(query *model.CursorQuery, bean 
 				orderBy = fmt.Sprintf("%s %s", k.Property, "ASC")
 
 			default:
-				orderBy = fmt.Sprintf("%s %s", k.Property, "DESC")
+				orderBy = fmt.Sprintf("%s %s", 
+				k.Property, "DESC")
 
 			}
 			sess = sess.Order(orderBy)
@@ -143,7 +150,7 @@ func (m *{{.upperStartCamelObject}}Model) Cursor(query *model.CursorQuery, bean 
 	var maxId int64 = 0
 	var minId int64 = 9223372036854775807
 
-	for _, k := range bean {
+	for _, k := range *bean {
 		if k.{{.uperStartCamelPrimaryKey}} < minId {
 			minId = k.{{.uperStartCamelPrimaryKey}}
 		}
@@ -153,7 +160,7 @@ func (m *{{.upperStartCamelObject}}Model) Cursor(query *model.CursorQuery, bean 
 	}
 
 	var hasMore bool
-	if int32(len(bean)) > query.Size {
+	if int32(len(*bean)) > query.Size {
 		hasMore = true
 	}
 
@@ -167,5 +174,5 @@ func (m *{{.upperStartCamelObject}}Model) Cursor(query *model.CursorQuery, bean 
 	}
 	return
 }
-
+{{end}}
 
