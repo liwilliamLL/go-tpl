@@ -10,7 +10,7 @@ func (m *{{.upperStartCamelObject}}Model) FindInBatches(ids []int64) (resp []*{{
 	return
 }
 
-func (m *DicCityModel) Count(filters map[string]interface{}) (count int64, err error) {
+func (m *{{.upperStartCamelObject}}Model) Count(filters map[string]interface{}) (count int64, err error) {
 	bean := make([]*{{.upperStartCamelObject}}, 0)
 	columns, err := mysql.GetTableColumns(m.conn, bean)
 	if err != nil {
