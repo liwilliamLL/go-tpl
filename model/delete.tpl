@@ -24,7 +24,7 @@ func (m *{{.upperStartCamelObject}}Model) DeleteBatches(ids []int64) (rowsAffect
 func (m *{{.upperStartCamelObject}}Model) DeleteByWhere(filters map[string]interface{}) (rowsAffected int64, err error) {
 
 	if filters == nil || len(filters) == 0 {
-		return xerr.NewError(xerr.ResCodeIllegalOp)
+		return 0, xerr.NewError(xerr.ResCodeIllegalOp)
 	}
 
 	bean := make([]*{{.upperStartCamelObject}}, 0)

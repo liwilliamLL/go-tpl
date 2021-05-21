@@ -15,7 +15,7 @@ func (m *{{.upperStartCamelObject}}Model) Update( data *{{.upperStartCamelObject
 }
 
 
-func (m *{{.upperStartCamelObject}}) UpdateMapByWhere(filters map[string]interface{}, maps map[string]interface{}) (err error) {
+func (m *{{.upperStartCamelObject}}Model) UpdateMapByWhere(filters map[string]interface{}, maps map[string]interface{}) (err error) {
 	bean := make([]*{{.upperStartCamelObject}}, 0)
 	columns, err := mysql.GetTableColumns(m.conn, bean)
 	if err != nil {
@@ -30,7 +30,7 @@ func (m *{{.upperStartCamelObject}}) UpdateMapByWhere(filters map[string]interfa
 	return
 }
 
-func (m *{{.upperStartCamelObject}}) UpdateDataByWhere(filters map[string]interface{}, data *DicCity) (err error) {
+func (m *{{.upperStartCamelObject}}Model) UpdateDataByWhere(filters map[string]interface{}, data *DicCity) (err error) {
 	bean := make([]*{{.upperStartCamelObject}}, 0)
 	columns, err := mysql.GetTableColumns(m.conn, bean)
 	if err != nil {
