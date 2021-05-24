@@ -4,7 +4,6 @@ import (
 	"flag"
 	"fmt"
 	"github.com/gin-gonic/gin"
-	
 	{{.imports}}
 
 	"github.com/tal-tech/go-zero/core/conf"
