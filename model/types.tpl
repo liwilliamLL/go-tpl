@@ -5,6 +5,7 @@ type (
 		table string
 	}
 
+	// {{.upperStartCamelObject}} {{.comment}}
 	{{.upperStartCamelObject}} struct {
 		{{.fields}}
 	}
