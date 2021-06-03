@@ -18,6 +18,6 @@ func {{.HandlerName}}(ctx *svc.ServiceContext) http.HandlerFunc {
 
 		l := logic.New{{.LogicType}}(r.Context(), ctx)
 		{{if .HasResp}}resp, {{end}}err := l.{{.Call}}({{if .HasRequest}}req{{end}})
-		xhttp.HttpResult(r,w,resp,err)
+		xhttp.HttpResult(r, w, resp, err)
 	}
 }
