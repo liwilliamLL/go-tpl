@@ -10,3 +10,13 @@ message T_{{.Name}} {
 {{ end }}
 }
 {{ end }}
+
+// {{.TableName}}.proto
+{{range .MessageList }}
+// {{.Comment}}
+message T_Update_{{.Name}} {
+{{range .MessageDetail }}    // {{.Comment}}
+    {{if .NotKey}}optional {{end}}{{.TypeName}} {{.AttrName}} = {{.Num}};       
+{{ end }}
+}
+{{ end }}
