@@ -1,5 +1,5 @@
 import (
 	{{if .sql}}"database/sql"{{end}}
-	"erp-server/lib/provider/mysql"
+	"git.orderc.vip/base/gozero-base/provider/mysql"
 	{{if .time}}"time"{{end}}
 )

@@ -1,8 +1,8 @@
 import (
 	{{if .sql}}"database/sql"{{end}}
-	"erp-server/lib/model"
-	"erp-server/lib/provider/mysql"
-	"erp-server/lib/xerr"
+	"git.orderc.vip/base/gozero-base/model"
+	"git.orderc.vip/base/gozero-base/provider/mysql"
+	"git.orderc.vip/base/gozero-base/xerr"
 	{{if .status}}"fmt"{{end}}
 	{{if .time}}"time"{{end}}
 )
