@@ -5,4 +5,5 @@ import (
 	"git.orderc.vip/base/gozero-base/xerr"
 	{{if .status}}"fmt"{{end}}
 	{{if .time}}"time"{{end}}
+	{{if .gorm}}"gorm.io/gorm"{{end}}
 )
