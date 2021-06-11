@@ -99,11 +99,58 @@ func (m *{{.upperStartCamelObject}}Model)Page(query *model.PageQuery, bean *[]*{
 
 
 {{if .status}}
+
+func (m *{{.upperStartCamelObject}}Model) CursorAll(filters map[string]interface{}, sort []*model.SortSpec) (bean []*{{.upperStartCamelObject}}, err error) {
+	var cursor *model.Cursor
+	bean = make([]*{{.upperStartCamelObject}}, 0)
+	current, hasMore, maxCursor := 0, true, int64(0)
+
+	for current < 1000 && hasMore {
+		_bean := make([]*{{.upperStartCamelObject}}, 0)
+		query := &model.CursorQuery{
+			Filters:    filters,
+			Cursor:     maxCursor,
+			CursorSort: sort,
+			Size:       1000,
+			Direction:  0,
+		}
+		cursor, err = m.Cursor(query, &_bean)
+		if err != nil {
+			return nil, err
+		}
+		bean = append(bean, _bean...)
+		if !cursor.HasMore {
+			break
+		}
+
+		max, ok := cursor.MaxCursor.(int64)
+		if ok {
+			maxCursor = max
+		} else {
+			break
+		}
+
+		current += 1
+	}
+
+	return
+}
+
 func (m *{{.upperStartCamelObject}}Model) Cursor(query *model.CursorQuery, bean *[]*{{.upperStartCamelObject}}) (cursor *model.Cursor, err error) {
 	if bean ==nil{
 		bean = &[]*{{.upperStartCamelObject}}{}
 	}
 	columns, err := mysql.GetTableColumns(m.conn, bean)
+
+	if query.CursorSort == nil || len(query.CursorSort) == 0 {
+		query.Direction = 0
+		query.CursorSort = []*model.SortSpec{
+			&model.SortSpec{
+				Property: "{{.lowerStartCamelPrimaryKey}}",
+				Type:     model.SortType_ASC,
+			},
+		}
+	}
 
 	if err != nil {
 		return
@@ -114,16 +161,17 @@ func (m *{{.upperStartCamelObject}}Model) Cursor(query *model.CursorQuery, bean 
 	}
 	var orderBy string
 
-	sess := m.conn.GetEngine().Model(&{{.upperStartCamelObject}}{}).Where(cond,values...).Limit(int(query.Size) + 1)
+	sess := m.conn.GetEngine().Model(&{{.upperStartCamelObject}}{}).Where(cond,values...)
 
 	if query.Direction == 0 {
+		sess.Where("{{.originalPrimaryKey}} > ?", query.Cursor)
 		for _, k := range query.CursorSort {
 			if _, ok := columns[k.Property]; !ok {
 				err = xerr.NewError(xerr.ERR_DB_UNKNOWN_FIELD, nil, k.Property)
 				return
 			}
 			switch k.Type {
-			case model.SortType_DSC:
+			case model.SortType_ASC:
 				orderBy = fmt.Sprintf("%s %s", k.Property, "ASC")
 
 			default:
@@ -135,6 +183,7 @@ func (m *{{.upperStartCamelObject}}Model) Cursor(query *model.CursorQuery, bean 
 		}
 
 	} else {
+		sess.Where("{{.originalPrimaryKey}} < ?", query.Cursor)
 		for _, k := range query.CursorSort {
 			if _, ok := columns[k.Property]; !ok {
 				err = xerr.NewError(xerr.ERR_DB_UNKNOWN_FIELD, nil, k.Property)
@@ -152,6 +201,7 @@ func (m *{{.upperStartCamelObject}}Model) Cursor(query *model.CursorQuery, bean 
 		}
 	}
 
+	sess.Limit(int(query.Size) + 1)
 	err = sess.Find(bean).Error
 
 	var maxCount int64
@@ -159,6 +209,12 @@ func (m *{{.upperStartCamelObject}}Model) Cursor(query *model.CursorQuery, bean 
 	if err != nil {
 		err = xerr.NewError(xerr.ERR_DB_QUERY, err, err.Error())
 		return
+	}
+
+	var hasMore bool
+	if int32(len(*bean)) > query.Size {
+		hasMore = true
+		*bean = (*bean)[0:query.Size]
 	}
 
 	var maxId int64 = 0
@@ -171,11 +227,6 @@ func (m *{{.upperStartCamelObject}}Model) Cursor(query *model.CursorQuery, bean 
 		if k.{{.uperStartCamelPrimaryKey}} > maxId {
 			maxId = k.{{.uperStartCamelPrimaryKey}}
 		}
-	}
-
-	var hasMore bool
-	if int32(len(*bean)) > query.Size {
-		hasMore = true
 	}
 
 	cursor = &model.Cursor{
