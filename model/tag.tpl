@@ -1,1 +1,1 @@
-`gorm:"{{if .isPrimaryKey}}primaryKey,{{end}}column:{{.field}}" json:"{{.field}}"`
+`gorm:"{{if .isPrimaryKey}}primaryKey,{{end}}column:{{.field}}{{.foreignKey}}{{.references}}" json:"{{.field}}"`
