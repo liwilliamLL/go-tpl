@@ -34,7 +34,7 @@ func (m *{{.upperStartCamelObject}}Model)Page(query *model.PageQuery, bean *[]*{
 		Joins("{{.upperStartCamelObject}}").
 		{{end}}
 		Where(cond, values...).
-		Limit(limit).Offset(offset)
+		{{.group}}Limit(limit).Offset(offset)
 
 	if sorts != nil {
 		for _, s := range sorts {
@@ -47,7 +47,7 @@ func (m *{{.upperStartCamelObject}}Model)Page(query *model.PageQuery, bean *[]*{
 	}
 	err = sess.Find(&bean).Error
 	var maxCount int64
-	err = sess.Count(&maxCount).Error
+	err = sess.{{.distinct}}Count(&maxCount).Error
 	if err != nil {
 		err = xerr.NewError(xerr.ERR_DB_QUERY, err, err.Error())
 		return
