@@ -73,13 +73,13 @@ func (m *{{.upperStartCamelObject}}Model)Page(query *model.PageQuery, bean *[]*{
 	if err != nil {
 		return
 	}
-	sess := m.conn.GetEngine().Model(&{{.upperStartCamelObject}}{}).Where(cond, values...).Limit(limit).Offset(offset)
+	sess := m.conn.GetEngine().Model(&{{.upperStartCamelObject}}{}).Where(cond, values...)
 	if sorts != nil {
 		for _, s := range sorts {
 			sess = sess.Order(s)
 		}
 	}
-	err = sess.Find(&bean).Error
+	err = sess.Limit(limit).Offset(offset).Find(&bean).Error
 	var maxCount int64
 	err = sess.Count(&maxCount).Error
 	//content := reflectUtils.MakeSlicePtr(bean, 0, 0)
