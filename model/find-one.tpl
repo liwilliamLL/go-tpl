@@ -79,12 +79,7 @@ func (m *{{.upperStartCamelObject}}Model)Page(query *model.PageQuery, bean *[]*{
 			sess = sess.Order(s)
 		}
 	}
-	var maxCount int64
-    err = sess.Count(&maxCount).Error
-	if err != nil {
-		err = xerr.NewError(xerr.ERR_DB_QUERY, err, err.Error())
-		return
-	}
+
 	err = sess.Limit(limit).Offset(offset).Find(&bean).Error
 	//content := reflectUtils.MakeSlicePtr(bean, 0, 0)
 	//total, err := sess.FindAndCount(content)
@@ -92,6 +87,12 @@ func (m *{{.upperStartCamelObject}}Model)Page(query *model.PageQuery, bean *[]*{
 		err = xerr.NewError(xerr.ERR_DB_QUERY, err, err.Error())
 		return
 	}
+	var maxCount int64
+        err = sess.Count(&maxCount).Error
+    	if err != nil {
+    		err = xerr.NewError(xerr.ERR_DB_QUERY, err, err.Error())
+    		return
+    	}
 	page = &model.Page{
 		Content:  bean,
 		Total:    maxCount,
