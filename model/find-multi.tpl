@@ -17,7 +17,7 @@ func (m *{{.upperStartCamelObject}}Model)Page(query *model.PageQuery, bean *[]*{
 		}
 	}
 
-	cond, values, err := mysql.BuildWhere(query.Filters, columns)
+	cond, values, err := mysql.BuildWhere(query.Filters, columns, "{{.snakeStartCamelObject}}")
 	if err != nil {
 		return
 	}
