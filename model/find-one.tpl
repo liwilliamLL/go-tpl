@@ -79,9 +79,9 @@ func (m *{{.upperStartCamelObject}}Model)Page(query *model.PageQuery, bean *[]*{
 			sess = sess.Order(s)
 		}
 	}
-	err = sess.Limit(limit).Offset(offset).Find(&bean).Error
 	var maxCount int64
-	err = sess.Count(&maxCount).Error
+    err = sess.Count(&maxCount).Error
+	err = sess.Limit(limit).Offset(offset).Find(&bean).Error
 	//content := reflectUtils.MakeSlicePtr(bean, 0, 0)
 	//total, err := sess.FindAndCount(content)
 	if err != nil {

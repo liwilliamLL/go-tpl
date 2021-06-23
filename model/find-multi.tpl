@@ -44,9 +44,9 @@ func (m *{{.upperStartCamelObject}}Model)Page(query *model.PageQuery, bean *[]*{
 	if bean == nil {
 		bean = &[]*{{.upperStartCamelObject}}{}
 	}
-	err = sess.Limit(limit).Offset(offset).Find(&bean).Error
 	var maxCount int64
-	err = sess.{{.distinct}}Count(&maxCount).Error
+    err = sess.{{.distinct}}Count(&maxCount).Error
+	err = sess.Limit(limit).Offset(offset).Find(&bean).Error
 	if err != nil {
 		err = xerr.NewError(xerr.ERR_DB_QUERY, err, err.Error())
 		return
