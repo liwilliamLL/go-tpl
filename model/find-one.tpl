@@ -88,11 +88,11 @@ func (m *{{.upperStartCamelObject}}Model)Page(query *model.PageQuery, bean *[]*{
 		return
 	}
 	var maxCount int64
-        err = sess.Count(&maxCount).Error
-    	if err != nil {
-    		err = xerr.NewError(xerr.ERR_DB_QUERY, err, err.Error())
-    		return
-    	}
+	err = sess.Limit(-1).Offset(0).Count(&maxCount).Error
+	if err != nil {
+		err = xerr.NewError(xerr.ERR_DB_QUERY, err, err.Error())
+		return
+	}
 	page = &model.Page{
 		Content:  bean,
 		Total:    maxCount,
