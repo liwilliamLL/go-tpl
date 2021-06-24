@@ -51,7 +51,7 @@ func (m *{{.upperStartCamelObject}}Model)Page(query *model.PageQuery, bean *[]*{
 		return
 	}
 	var maxCount int64
-	err = sess.{{.distinct}}Limit(-1).Offset(0).Count(&maxCount).Error
+	err = sess.{{.distinct}}Limit(-1).Offset(-1).Count(&maxCount).Error
 	if err != nil {
 		err = xerr.NewError(xerr.ERR_DB_QUERY, err, err.Error())
 		return
