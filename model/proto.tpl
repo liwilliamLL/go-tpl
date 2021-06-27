@@ -6,6 +6,7 @@ package {{.Models}};
 // {{.Comment}}
 message T_{{.Name}} {
 {{range .MessageDetail }}    // {{.Comment}}
+    // @inject_tag: json:"{{.AttrName -}}"
     {{.TypeName}} {{.AttrName}} = {{.Num}};       
 {{ end }}
 }
