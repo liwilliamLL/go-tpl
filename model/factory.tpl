@@ -1,3 +1,5 @@
+package {{.pkg}}
+
 import (
 	"dao.erp/{{.pkg}}/dto"
 	"git.orderc.vip/base/gozero-base/provider/mysql"
@@ -11,7 +13,7 @@ type (
 	}
 )
 
-func New{{.upperStartCamelObject}}Dao(config *mysql.Config{{if .withRedis}}, redisCfg *redisclient.Config{{end}}) *{{.upperStartCamelObject}} {
+func New{{.upperStartCamelObject}}Dao(config *mysql.Config{{if .withRedis}}, redisCfg *redisclient.Config{{end}}) *{{.upperStartCamelObject}}Dao {
 	dataSource,err := mysql.NewDataSource(config)
 	if err !=nil{
 		panic(err)
