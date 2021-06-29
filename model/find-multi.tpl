@@ -24,7 +24,7 @@ func (m *{{.upperStartCamelObject}}Model)Page(query *model.PageQuery, bean *[]*{
 
 	//fmt.Printf("%+v", p_columns)
 	limit, offset := mysql.BuildLimit(query)
-	sorts, err := mysql.BuildSort(query.Sort, columns)
+	sorts, err := mysql.BuildSort(query.Sort, columns, "{{.snakeStartCamelObject}}")
 	if err != nil {
 		return
 	}
