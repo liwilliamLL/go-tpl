@@ -3,7 +3,7 @@ package {{.pkg}}
 import (
 	"dao.erp/{{.pkg}}/dto"
 	"git.orderc.vip/base/gozero-base/provider/mysql"
-	"git.orderc.vip/base/gozero-base/provider/redisclient"
+	{{if .withRedis}}"git.orderc.vip/base/gozero-base/provider/redisclient"{{end}}
 )
 
 
