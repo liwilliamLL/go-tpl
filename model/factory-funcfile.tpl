@@ -1,0 +1,1 @@
+{{.name}}Model: dto.New{{.name}}Model(dataSource{{if .withRedis}}, redisCli{{end}}) ,
