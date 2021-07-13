@@ -30,6 +30,10 @@ func New{{.upperStartCamelObject}}Model(conn *mysql.DataSource{{if .withRedis}},
 		panic(errors.New(fmt.Sprintf("%s: query max err", m.table)))
 	}
 
+	if result.Max > (1 << 53) {
+        result.Max = 100000
+    }
+
 	var id int64
 	id, err = m.redisFlake.CurrentInt64Id()
 	if err != nil {
@@ -44,9 +48,6 @@ func New{{.upperStartCamelObject}}Model(conn *mysql.DataSource{{if .withRedis}},
 		return
 	}
 
-	if result.Max > (1 << 53) {
-		result.Max = 100000
-	}
 	err = m.redisFlake.SetInt64Id(result.Max)
 	if err != nil {
 		panic(errors.New(fmt.Sprintf("%s: redisFlask set currentId err", m.table)))
