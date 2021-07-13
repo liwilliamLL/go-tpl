@@ -19,6 +19,10 @@ func New{{.upperStartCamelObject}}Model(conn *mysql.DataSource{{if .withRedis}},
 	}
 
 	{{if .withRedis -}}
+    type MaxInt64Struct struct {
+        Max int64 `json:"max"`
+    }
+
 	var err error
 	var result MaxInt64Struct
 	err = m.conn.GetEngine().Debug().Table(m.table).Select("max(`id`) as max").Limit(1).Scan(&result).Error

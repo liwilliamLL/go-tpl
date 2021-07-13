@@ -1,4 +1,5 @@
 import (
+    {{if .withRedis}}"errors"{{end}}
 	{{if .sql}}"database/sql"{{end}}
 	"git.orderc.vip/base/gozero-base/model"
 	"git.orderc.vip/base/gozero-base/provider/mysql"
