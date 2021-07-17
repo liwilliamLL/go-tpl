@@ -1,4 +1,60 @@
 
+
+
+func (m *{{.upperStartCamelObject}}Model) QueryAll(filters map[string]interface{}, sort []*model.SortSpec) (bean []*{{.upperStartCamelObject}}, err error) {
+	columns := make(map[string]bool, 0)
+	for k, v := range map[string]interface{}{
+		"{{.snakeStartCamelObject}}": &{{.upperStartCamelObject}}{},
+		{{range .joins -}}
+		"{{.upperStartCamelObject}}":     &{{.dataType}}{},
+		{{end}}
+	} {
+		cs, xerr := mysql.GetTableColumns(m.conn, v, k)
+		if xerr != nil {
+			return
+		}
+
+		for k, v := range cs {
+			columns[k] = v
+		}
+	}
+
+	cond, values, err := mysql.BuildWhere(query.Filters, columns, "{{.snakeStartCamelObject}}")
+	if err != nil {
+		return
+	}
+
+	//fmt.Printf("%+v", p_columns)
+	//limit, offset := mysql.BuildLimit(query)
+	sorts, err := mysql.BuildSort(query.Sort, columns, "{{.snakeStartCamelObject}}")
+	if err != nil {
+		return
+	}
+
+	sess := m.conn.GetEngine().Debug().Model(&{{.upperStartCamelObject}}{}).
+		{{range .joins -}}
+		Joins("{{.upperStartCamelObject}}").
+		{{end}}
+		{{.group}}Where(cond, values...)
+
+	if sorts != nil {
+		for _, s := range sorts {
+			sess = sess.Order(s)
+		}
+	}
+
+	if bean == nil {
+		bean = &[]*{{.upperStartCamelObject}}{}
+	}
+
+	err = sess.Find(&bean).Error
+	if err != nil {
+		err = xerr.NewError(xerr.ERR_DB_QUERY, err, err.Error())
+		return
+	}
+	return
+}
+
 func (m *{{.upperStartCamelObject}}Model)Page(query *model.PageQuery, bean *[]*{{.upperStartCamelObject}}) (page *model.Page, err error) {
 	columns := make(map[string]bool, 0)
 	for k, v := range map[string]interface{}{
