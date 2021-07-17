@@ -13,7 +13,7 @@ func (m *{{.upperStartCamelObject}}Model) FindInBatches(ids []int64) (resp []*{{
 func (m *{{.upperStartCamelObject}}Model) FindOneByWhere(filters map[string]interface{}) (resp *{{.upperStartCamelObject}}, err error) {
 
 	resp = &{{.upperStartCamelObject}}{}
-	columns, err := mysql.GetTableColumns(m.conn, bean)
+	columns, err := mysql.GetTableColumns(m.conn, resp)
 	if err != nil {
 		return
 	}
