@@ -1,7 +1,7 @@
 
 
 
-func (m *{{.upperStartCamelObject}}Model) QueryAll(filters map[string]interface{}, sort []*model.SortSpec) (bean []*{{.upperStartCamelObject}}, err error) {
+func (m *{{.upperStartCamelObject}}Model) CursorAll(filters map[string]interface{}, sort []*model.SortSpec) (bean []*{{.upperStartCamelObject}}, err error) {
 	columns := make(map[string]bool, 0)
 	for k, v := range map[string]interface{}{
 		"{{.snakeStartCamelObject}}": &{{.upperStartCamelObject}}{},
