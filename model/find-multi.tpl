@@ -1,7 +1,7 @@
 
 
 
-func (m *{{.upperStartCamelObject}}Model) QueryAll(filters map[string]interface{}, sort []*model.SortSpec) (bean []*{{.upperStartCamelObject}}, err error) {
+func (m *{{.upperStartCamelObject}}Model) CursorAll(filters map[string]interface{}, sort []*model.SortSpec) (bean []*{{.upperStartCamelObject}}, err error) {
 	columns := make(map[string]bool, 0)
 	for k, v := range map[string]interface{}{
 		"{{.snakeStartCamelObject}}": &{{.upperStartCamelObject}}{},
@@ -19,14 +19,14 @@ func (m *{{.upperStartCamelObject}}Model) QueryAll(filters map[string]interface{
 		}
 	}
 
-	cond, values, err := mysql.BuildWhere(query.Filters, columns, "{{.snakeStartCamelObject}}")
+	cond, values, err := mysql.BuildWhere(filters, columns, "{{.snakeStartCamelObject}}")
 	if err != nil {
 		return
 	}
 
 	//fmt.Printf("%+v", p_columns)
 	//limit, offset := mysql.BuildLimit(query)
-	sorts, err := mysql.BuildSort(query.Sort, columns, "{{.snakeStartCamelObject}}")
+	sorts, err := mysql.BuildSort(sort, columns, "{{.snakeStartCamelObject}}")
 	if err != nil {
 		return
 	}
@@ -58,7 +58,7 @@ func (m *{{.upperStartCamelObject}}Model) QueryAll(filters map[string]interface{
 	}
 
 	if bean == nil {
-		bean = &[]*{{.upperStartCamelObject}}{}
+		bean = []*{{.upperStartCamelObject}}{}
 	}
 
 	err = sess.Find(&bean).Error
