@@ -1,4 +1,5 @@
 import (
+    {{if gt (len .joins) 0}}"fmt"{{end}}
     {{if .withRedis}}"errors"{{end}}
 	{{if .sql}}"database/sql"{{end}}
 	"git.orderc.vip/base/gozero-base/model"
@@ -6,6 +7,7 @@ import (
 	"git.orderc.vip/base/gozero-base/xerr"
 	{{if .withRedis}}"github.com/go-redis/redis/v8"{{end}}
 	{{if .withRedis}}"git.orderc.vip/base/gozero-base/redisflake"{{end}}
+	{{if gt (len .joins) 0}}"strings"{{end}}
 	{{range .joins -}}
 	{{.aliasPackage}} "{{.package}}"
 	{{end -}}
