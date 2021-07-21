@@ -31,9 +31,23 @@ func (m *{{.upperStartCamelObject}}Model) QueryAll(filters map[string]interface{
 		return
 	}
 
+	var joinColumns string
+	selectColumns := []string{fmt.Sprintf("%s.*", (&{{.upperStartCamelObject}}{}).TableName())}
+	{{range .joins -}}
+	{
+		joinColumns, err = mysql.GetTableColumnsStr(m.conn, &{{.dataType}}{}, "{{.upperStartCamelObject}}", true)
+		if err != nil {
+			return
+		}
+
+		selectColumns = append(selectColumns, joinColumns)
+	}
+	{{end}}
+
 	sess := m.conn.GetEngine().Debug().Model(&{{.upperStartCamelObject}}{}).
+		Select(strings.Join(selectColumns, ",")).
 		{{range .joins -}}
-		Joins("{{.upperStartCamelObject}}").
+		Joins("{{.joinType}} JOIN `{{.snakeStartCamelObject}}` `{{.upperStartCamelObject}}` ON `{{$.snakeStartCamelObject}}`.`{{.foreignKey}}` = `{{.upperStartCamelObject}}`.`{{.references}}` AND {{.upperStartCamelObject}}.deleted_at is NUll").
 		{{end}}
 		{{.group}}Where(cond, values...)
 
@@ -85,9 +99,23 @@ func (m *{{.upperStartCamelObject}}Model)Page(query *model.PageQuery, bean *[]*{
 		return
 	}
 
+	var joinColumns string
+	selectColumns := []string{fmt.Sprintf("%s.*", (&{{.upperStartCamelObject}}{}).TableName())}
+	{{range .joins -}}
+	{
+		joinColumns, err = mysql.GetTableColumnsStr(m.conn, &{{.dataType}}{}, "{{.upperStartCamelObject}}", true)
+		if err != nil {
+			return
+		}
+
+		selectColumns = append(selectColumns, joinColumns)
+	}
+	{{end}}
+
 	sess := m.conn.GetEngine().Debug().Model(&{{.upperStartCamelObject}}{}).
+		Select(strings.Join(selectColumns, ",")).
 		{{range .joins -}}
-		Joins("{{.upperStartCamelObject}}").
+		Joins("{{.joinType}} JOIN `{{.snakeStartCamelObject}}` `{{.upperStartCamelObject}}` ON `{{$.snakeStartCamelObject}}`.`{{.foreignKey}}` = `{{.upperStartCamelObject}}`.`{{.references}}` AND {{.upperStartCamelObject}}.deleted_at is NUll").
 		{{end}}
 		{{.group}}Where(cond, values...)
 
