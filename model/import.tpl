@@ -1,4 +1,5 @@
 import (
+	{{gt (len .joins) 0}}"fmt"{{end}}
 	{{if .sql}}"database/sql"{{end}}
 	"git.orderc.vip/base/gozero-base/provider/mysql"
 	{{range .joins -}}
