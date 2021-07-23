@@ -43,6 +43,24 @@ func (m *{{.upperStartCamelObject}}Model) Count(filters map[string]interface{}) 
 }
 
 
+func (m *{{.upperStartCamelObject}}Model) QuerySum(filters map[string]interface{},sumKey string) (num int, err error) {
+	bean := make([]*{{.upperStartCamelObject}}, 0)
+	columns, err := mysql.GetTableColumns(m.conn, bean)
+	if err != nil {
+		return
+	}
+
+	cond, values, err := mysql.BuildWhere(filters, columns)
+	if err != nil {
+		return
+	}
+
+
+	err = m.conn.GetEngine().Debug().Model(&{{.upperStartCamelObject}}{}).Where(cond, values...).Pluck("COALESCE(SUM("+sumKey+"), 0) as num", &num).Error
+	return
+}
+
+
 func (m *{{.upperStartCamelObject}}Model) Query(filters map[string]interface{}, sort []*model.SortSpec, limit int) (bean []*{{.upperStartCamelObject}}, err error) {
 	bean = make([]*{{.upperStartCamelObject}}, 0)
 	columns, err := mysql.GetTableColumns(m.conn, bean)
