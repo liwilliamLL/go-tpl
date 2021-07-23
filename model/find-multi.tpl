@@ -32,7 +32,7 @@ func (m *{{.upperStartCamelObject}}Model) CursorAll(filters map[string]interface
 	}
 
 	var joinColumns string
-	selectColumns := []string{fmt.Sprintf("%s.*", (&{{.upperStartCamelObject}}{}).TableName())}
+	selectColumns := []string{fmt.Sprintf("%s.*", m.table)}
 	{{range .joins -}}
 	{
 		joinColumns, err = mysql.GetTableColumnsStr(m.conn, &{{.dataType}}{}, "{{.upperStartCamelObject}}", true)
@@ -100,7 +100,7 @@ func (m *{{.upperStartCamelObject}}Model)Page(query *model.PageQuery, bean *[]*{
 	}
 
 	var joinColumns string
-	selectColumns := []string{fmt.Sprintf("%s.*", (&{{.upperStartCamelObject}}{}).TableName())}
+	selectColumns := []string{fmt.Sprintf("%s.*", m.table)}
 	{{range .joins -}}
 	{
 		joinColumns, err = mysql.GetTableColumnsStr(m.conn, &{{.dataType}}{}, "{{.upperStartCamelObject}}", true)
