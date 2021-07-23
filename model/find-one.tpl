@@ -1,12 +1,12 @@
 func (m *{{.upperStartCamelObject}}Model)FindOne({{.lowerStartCamelPrimaryKey}} {{.dataType}}) (resp *{{.upperStartCamelObject}}, err error){
 	resp = &{{.upperStartCamelObject}}{}
-	err =  m.conn.GetEngine().Debug().Model(resp).Where("{{.originalPrimaryKey}} = ?",{{.lowerStartCamelPrimaryKey}}).First(resp).Error
+	err =  m.conn.GetEngine().Debug().Table(m.table).Where("{{.originalPrimaryKey}} = ?",{{.lowerStartCamelPrimaryKey}}).First(resp).Error
 	return
 }
 
 func (m *{{.upperStartCamelObject}}Model) FindInBatches(ids []int64) (resp []*{{.upperStartCamelObject}}, err error) {
 	resp = make([]*{{.upperStartCamelObject}}, 0)
-	err = m.conn.GetEngine().Debug().Model(&{{.upperStartCamelObject}}{}).Where("`id` IN ?", ids).Find(&resp).Error
+	err = m.conn.GetEngine().Debug().Table(m.table).Where("`id` IN ?", ids).Find(&resp).Error
 	return
 }
 
@@ -22,7 +22,7 @@ func (m *{{.upperStartCamelObject}}Model) FindOneByWhere(filters map[string]inte
 	if err != nil {
 		return
 	}
-	err =  m.conn.GetEngine().Debug().Model(resp).Where(cond, values...).First(resp).Error
+	err =  m.conn.GetEngine().Debug().Table(m.table).Where(cond, values...).First(resp).Error
 	return
 }
 
@@ -38,7 +38,7 @@ func (m *{{.upperStartCamelObject}}Model) Count(filters map[string]interface{}) 
 		return
 	}
 
-	err = m.conn.GetEngine().Debug().Model(&{{.upperStartCamelObject}}{}).Where(cond, values...).Count(&count).Error
+	err = m.conn.GetEngine().Debug().Table(m.table).Where(cond, values...).Count(&count).Error
 	return
 }
 
@@ -60,7 +60,7 @@ func (m *{{.upperStartCamelObject}}Model) Query(filters map[string]interface{}, 
 	if err != nil {
 		return
 	}
-	sess := m.conn.GetEngine().Debug().Model(&{{.upperStartCamelObject}}{}).Where(cond, values...).Limit(limit)
+	sess := m.conn.GetEngine().Debug().Table(m.table).Where(cond, values...).Limit(limit)
 	if sorts != nil {
 		for _, s := range sorts {
 			sess = sess.Order(s)
@@ -90,7 +90,7 @@ func (m *{{.upperStartCamelObject}}Model)Page(query *model.PageQuery, bean *[]*{
 	if err != nil {
 		return
 	}
-	sess := m.conn.GetEngine().Debug().Model(&{{.upperStartCamelObject}}{}).Where(cond, values...)
+	sess := m.conn.GetEngine().Debug().Table(m.table).Where(cond, values...)
 	if sorts != nil {
 		for _, s := range sorts {
 			sess = sess.Order(s)
@@ -183,7 +183,7 @@ func (m *{{.upperStartCamelObject}}Model) Cursor(query *model.CursorQuery, bean 
 	}
 	var orderBy string
 
-	sess := m.conn.GetEngine().Debug().Model(&{{.upperStartCamelObject}}{}).Where(cond,values...)
+	sess := m.conn.GetEngine().Debug().Table(m.table).Where(cond,values...)
 
 	if query.Direction == 0 {
 		sess.Where("{{.originalPrimaryKey}} > ?", query.Cursor)

@@ -1,6 +1,6 @@
 
 func (m *{{.upperStartCamelObject}}Model) Delete({{.lowerStartCamelPrimaryKey}} {{.dataType}}) (rowsAffected int64, err error) {
-	ret := m.conn.GetEngine().Model(&{{.upperStartCamelObject}}{}).Where("1=1 AND  {{.originalPrimaryKey}} = ?", {{.lowerStartCamelPrimaryKey}}).Delete(&{{.upperStartCamelObject}}{})
+	ret := m.conn.GetEngine().Table(m.table).Where("1=1 AND  {{.originalPrimaryKey}} = ?", {{.lowerStartCamelPrimaryKey}}).Delete(&{{.upperStartCamelObject}}{})
 	if ret.Error != nil {
 		return 0, err
 	}
@@ -13,7 +13,7 @@ func (m *{{.upperStartCamelObject}}Model) DeleteBatches(ids []int64) (rowsAffect
 		return 0, xerr.NewError(xerr.ERR_DB_QUERY, "ids length error")
 	}
 
-	ret := m.conn.GetEngine().Model(&{{.upperStartCamelObject}}{}).Where("1=1 AND {{.originalPrimaryKey}} IN ?", ids).Delete(&{{.upperStartCamelObject}}{})
+	ret := m.conn.GetEngine().Table(m.table).Where("1=1 AND {{.originalPrimaryKey}} IN ?", ids).Delete(&{{.upperStartCamelObject}}{})
 	if ret.Error != nil {
 		return 0, err
 	}
@@ -38,7 +38,7 @@ func (m *{{.upperStartCamelObject}}Model) DeleteByWhere(filters map[string]inter
 		return
 	}
 
-	ret := m.conn.GetEngine().Model(&{{.upperStartCamelObject}}{}).Where(cond, values...).Delete(&{{.upperStartCamelObject}}{})
+	ret := m.conn.GetEngine().Table(m.table).Where(cond, values...).Delete(&{{.upperStartCamelObject}}{})
 	if ret.Error != nil {
 		return 0, err
 	}

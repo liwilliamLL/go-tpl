@@ -1,11 +1,11 @@
 
 func (m *{{.upperStartCamelObject}}Model)UpdateByMap({{.lowerStartCamelPrimaryKey}} {{.dataType}} , maps map[string]interface{}) (err error){
-	err = m.conn.GetEngine().Debug().Model(&{{.upperStartCamelObject}}{}).Where("{{.originalPrimaryKey}} = ?",{{.lowerStartCamelPrimaryKey}}).Updates(maps).Error
+	err = m.conn.GetEngine().Debug().Table(m.table).Where("{{.originalPrimaryKey}} = ?",{{.lowerStartCamelPrimaryKey}}).Updates(maps).Error
 	return
 }
 
 func (m *{{.upperStartCamelObject}}Model) UpdateByMapReCount({{.lowerStartCamelPrimaryKey}} {{.dataType}} , maps map[string]interface{}) (updateNum int64, err error) {
-	ret := m.conn.GetEngine().Debug().Model(&{{.upperStartCamelObject}}{}).Where("{{.originalPrimaryKey}} = ?",{{.lowerStartCamelPrimaryKey}}).Updates(maps)
+	ret := m.conn.GetEngine().Debug().Table(m.table).Where("{{.originalPrimaryKey}} = ?",{{.lowerStartCamelPrimaryKey}}).Updates(maps)
 	if ret.Error != nil {
 		return 0, err
 	}
@@ -14,13 +14,13 @@ func (m *{{.upperStartCamelObject}}Model) UpdateByMapReCount({{.lowerStartCamelP
 
 
 func (m *{{.upperStartCamelObject}}Model) UpdateById({{.lowerStartCamelPrimaryKey}} {{.dataType}} , data *{{.upperStartCamelObject}}) (err error) {
-	err = m.conn.GetEngine().Debug().Model(&{{.upperStartCamelObject}}{}).Where("{{.originalPrimaryKey}} = ?",{{.lowerStartCamelPrimaryKey}}).Updates(data).Error
+	err = m.conn.GetEngine().Debug().Table(m.table).Where("{{.originalPrimaryKey}} = ?",{{.lowerStartCamelPrimaryKey}}).Updates(data).Error
 	return
 }
 
 
 func (m *{{.upperStartCamelObject}}Model) UpdateByIdReCount({{.lowerStartCamelPrimaryKey}} {{.dataType}} , data *{{.upperStartCamelObject}}) (updateNum int64, err error) {
-	ret := m.conn.GetEngine().Debug().Model(&{{.upperStartCamelObject}}{}).Where("{{.originalPrimaryKey}} = ?",{{.lowerStartCamelPrimaryKey}}).Updates(data)
+	ret := m.conn.GetEngine().Debug().Table(m.table).Where("{{.originalPrimaryKey}} = ?",{{.lowerStartCamelPrimaryKey}}).Updates(data)
 	if ret.Error != nil {
 		return 0, err
 	}
@@ -29,7 +29,7 @@ func (m *{{.upperStartCamelObject}}Model) UpdateByIdReCount({{.lowerStartCamelPr
 
 
 func (m *{{.upperStartCamelObject}}Model) Update( data *{{.upperStartCamelObject}}) (err error) {
-	err = m.conn.GetEngine().Debug().Model(&{{.upperStartCamelObject}}{}).Updates(data).Error
+	err = m.conn.GetEngine().Debug().Table(m.table).Updates(data).Error
 	return
 }
 
@@ -45,7 +45,7 @@ func (m *{{.upperStartCamelObject}}Model) UpdateMapByWhere(filters map[string]in
 	if err != nil {
 		return
 	}
-	err = m.conn.GetEngine().Debug().Model(&{{.upperStartCamelObject}}{}).Where(cond, values...).Updates(maps).Error
+	err = m.conn.GetEngine().Debug().Table(m.table).Where(cond, values...).Updates(maps).Error
 	return
 }
 
@@ -60,7 +60,7 @@ func (m *{{.upperStartCamelObject}}Model) UpdateMapByWhereReCount(filters map[st
 	if err != nil {
 		return
 	}
-	ret := m.conn.GetEngine().Debug().Model(&{{.upperStartCamelObject}}{}).Where(cond, values...).Updates(maps)
+	ret := m.conn.GetEngine().Debug().Table(m.table).Where(cond, values...).Updates(maps)
 	if ret.Error != nil {
 		return 0, err
 	}
@@ -79,6 +79,6 @@ func (m *{{.upperStartCamelObject}}Model) UpdateDataByWhere(filters map[string]i
 	if err != nil {
 		return
 	}
-	err = m.conn.GetEngine().Debug().Model(&{{.upperStartCamelObject}}{}).Where(cond, values...).Updates(data).Error
+	err = m.conn.GetEngine().Debug().Table(m.table).Where(cond, values...).Updates(data).Error
 	return
 }

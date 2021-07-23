@@ -1,1 +1,1 @@
-{{.name}}Model: dto.New{{.name}}Model(dataSource{{if .withRedis}}, redisCli{{end}}) ,
+{{.name}}Model: dto.New{{.name}}Model(tableName string, dataSource{{if .withRedis}}, redisCli{{end}}) ,

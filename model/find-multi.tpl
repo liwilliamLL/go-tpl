@@ -44,7 +44,7 @@ func (m *{{.upperStartCamelObject}}Model) CursorAll(filters map[string]interface
 	}
 	{{end}}
 
-	sess := m.conn.GetEngine().Debug().Model(&{{.upperStartCamelObject}}{}).
+	sess := m.conn.GetEngine().Debug().Table(m.table).
 		Select(strings.Join(selectColumns, ",")).
 		{{range .joins -}}
 		Joins("{{.joinType}} JOIN `{{.snakeStartCamelObject}}` `{{.upperStartCamelObject}}` ON `{{$.snakeStartCamelObject}}`.`{{.foreignKey}}` = `{{.upperStartCamelObject}}`.`{{.references}}` AND {{.upperStartCamelObject}}.deleted_at is NUll").
@@ -112,7 +112,7 @@ func (m *{{.upperStartCamelObject}}Model)Page(query *model.PageQuery, bean *[]*{
 	}
 	{{end}}
 
-	sess := m.conn.GetEngine().Debug().Model(&{{.upperStartCamelObject}}{}).
+	sess := m.conn.GetEngine().Debug().Table(m.table).
 		Select(strings.Join(selectColumns, ",")).
 		{{range .joins -}}
 		Joins("{{.joinType}} JOIN `{{.snakeStartCamelObject}}` `{{.upperStartCamelObject}}` ON `{{$.snakeStartCamelObject}}`.`{{.foreignKey}}` = `{{.upperStartCamelObject}}`.`{{.references}}` AND {{.upperStartCamelObject}}.deleted_at is NUll").
