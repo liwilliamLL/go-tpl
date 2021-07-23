@@ -1,15 +1,8 @@
 
-
-
 func (m *{{.upperStartCamelObject}}Model) CursorAll(filters map[string]interface{}, sort []*model.SortSpec) (bean []*{{.upperStartCamelObject}}, err error) {
 	columns := make(map[string]bool, 0)
-	for k, v := range map[string]interface{}{
-		"{{.snakeStartCamelObject}}": &{{.upperStartCamelObject}}{},
-		{{range .joins -}}
-		"{{.upperStartCamelObject}}":     &{{.dataType}}{},
-		{{end}}
-	} {
-		cs, xerr := mysql.GetTableColumns(m.conn, v, k)
+	{
+		cs, xerr := mysql.GetTableColumns(m.conn, m.table, &{{.upperStartCamelObject}}{}, "{{.snakeStartCamelObject}}")
 		if xerr != nil {
 			return
 		}
@@ -19,13 +12,35 @@ func (m *{{.upperStartCamelObject}}Model) CursorAll(filters map[string]interface
 		}
 	}
 
+	{{range .joins -}}
+	{
+		cs, xerr := mysql.GetTableColumns(m.conn, "{{.snakeStartCamelObject}}", &{{.dataType}}{}, "{{.upperStartCamelObject}}")
+		if xerr != nil {
+			return
+		}
+
+		for k, v := range cs {
+			columns[k] = v
+		}
+	}
+	{{end}}
+
 	cond, values, err := mysql.BuildWhere(filters, columns, "{{.snakeStartCamelObject}}")
 	if err != nil {
 		return
 	}
 
-	//fmt.Printf("%+v", p_columns)
-	//limit, offset := mysql.BuildLimit(query)
+	{{if .status}}
+	if sort == nil || len(sort) == 0 {
+		sort = []*model.SortSpec{
+			{
+				Property: "{{.lowerStartCamelPrimaryKey}}",
+				Type: model.SortType_DSC,
+				IgnoreCase: false,
+			},
+		}
+	}
+	{{end}}
 	sorts, err := mysql.BuildSort(sort, columns, "{{.snakeStartCamelObject}}")
 	if err != nil {
 		return
@@ -35,7 +50,7 @@ func (m *{{.upperStartCamelObject}}Model) CursorAll(filters map[string]interface
 	selectColumns := []string{fmt.Sprintf("%s.*", m.table)}
 	{{range .joins -}}
 	{
-		joinColumns, err = mysql.GetTableColumnsStr(m.conn, &{{.dataType}}{}, "{{.upperStartCamelObject}}", true)
+		joinColumns, err = mysql.GetTableColumnsStr(m.conn, "{{.snakeStartCamelObject}}", &{{.dataType}}{}, "{{.upperStartCamelObject}}", true)
 		if err != nil {
 			return
 		}
@@ -71,13 +86,8 @@ func (m *{{.upperStartCamelObject}}Model) CursorAll(filters map[string]interface
 
 func (m *{{.upperStartCamelObject}}Model)Page(query *model.PageQuery, bean *[]*{{.upperStartCamelObject}}) (page *model.Page, err error) {
 	columns := make(map[string]bool, 0)
-	for k, v := range map[string]interface{}{
-		"{{.snakeStartCamelObject}}": &{{.upperStartCamelObject}}{},
-		{{range .joins -}}
-		"{{.upperStartCamelObject}}":     &{{.dataType}}{},
-		{{end}}
-	} {
-		cs, xerr := mysql.GetTableColumns(m.conn, v, k)
+	{
+		cs, xerr := mysql.GetTableColumns(m.conn, m.table, &{{.upperStartCamelObject}}{}, "{{.snakeStartCamelObject}}")
 		if xerr != nil {
 			return
 		}
@@ -87,12 +97,35 @@ func (m *{{.upperStartCamelObject}}Model)Page(query *model.PageQuery, bean *[]*{
 		}
 	}
 
+	{{range .joins -}}
+	{
+		cs, xerr := mysql.GetTableColumns(m.conn, "{{.snakeStartCamelObject}}", &{{.dataType}}{}, "{{.upperStartCamelObject}}")
+		if xerr != nil {
+			return
+		}
+
+		for k, v := range cs {
+			columns[k] = v
+		}
+	}
+	{{end}}
+
 	cond, values, err := mysql.BuildWhere(query.Filters, columns, "{{.snakeStartCamelObject}}")
 	if err != nil {
 		return
 	}
 
-	//fmt.Printf("%+v", p_columns)
+	{{if .status}}
+	if query.Sort == nil || len(query.Sort) == 0 {
+		query.Sort = []*model.SortSpec{
+			{
+				Property: "{{.lowerStartCamelPrimaryKey}}",
+				Type: model.SortType_DSC,
+				IgnoreCase: false,
+			},
+		}
+	}
+	{{end}}
 	limit, offset := mysql.BuildLimit(query)
 	sorts, err := mysql.BuildSort(query.Sort, columns, "{{.snakeStartCamelObject}}")
 	if err != nil {
@@ -103,7 +136,7 @@ func (m *{{.upperStartCamelObject}}Model)Page(query *model.PageQuery, bean *[]*{
 	selectColumns := []string{fmt.Sprintf("%s.*", m.table)}
 	{{range .joins -}}
 	{
-		joinColumns, err = mysql.GetTableColumnsStr(m.conn, &{{.dataType}}{}, "{{.upperStartCamelObject}}", true)
+		joinColumns, err = mysql.GetTableColumnsStr(m.conn, "{{.snakeStartCamelObject}}", &{{.dataType}}{}, "{{.upperStartCamelObject}}", true)
 		if err != nil {
 			return
 		}

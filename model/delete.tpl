@@ -27,8 +27,8 @@ func (m *{{.upperStartCamelObject}}Model) DeleteByWhere(filters map[string]inter
 		return 0, xerr.NewError(xerr.ResCodeIllegalOp)
 	}
 
-	bean := make([]*{{.upperStartCamelObject}}, 0)
-	columns, err := mysql.GetTableColumns(m.conn, bean)
+	bean := &{{.upperStartCamelObject}}{}
+	columns, err := mysql.GetTableColumns(m.conn, m.table, bean)
 	if err != nil {
 		return
 	}
@@ -38,7 +38,7 @@ func (m *{{.upperStartCamelObject}}Model) DeleteByWhere(filters map[string]inter
 		return
 	}
 
-	ret := m.conn.GetEngine().Table(m.table).Where(cond, values...).Delete(&{{.upperStartCamelObject}}{})
+	ret := m.conn.GetEngine().Table(m.table).Where(cond, values...).Delete(bean)
 	if ret.Error != nil {
 		return 0, err
 	}

@@ -12,8 +12,7 @@ func (m *{{.upperStartCamelObject}}Model) FindInBatches(ids []int64) (resp []*{{
 
 func (m *{{.upperStartCamelObject}}Model) FindOneByWhere(filters map[string]interface{}) (resp *{{.upperStartCamelObject}}, err error) {
 
-	resp = &{{.upperStartCamelObject}}{}
-	columns, err := mysql.GetTableColumns(m.conn, resp)
+	columns, err := mysql.GetTableColumns(m.conn, m.table, &{{.upperStartCamelObject}}{})
 	if err != nil {
 		return
 	}
@@ -27,8 +26,7 @@ func (m *{{.upperStartCamelObject}}Model) FindOneByWhere(filters map[string]inte
 }
 
 func (m *{{.upperStartCamelObject}}Model) Count(filters map[string]interface{}) (count int64, err error) {
-	bean := make([]*{{.upperStartCamelObject}}, 0)
-	columns, err := mysql.GetTableColumns(m.conn, bean)
+	columns, err := mysql.GetTableColumns(m.conn, m.table, &{{.upperStartCamelObject}}{})
 	if err != nil {
 		return
 	}
@@ -44,8 +42,7 @@ func (m *{{.upperStartCamelObject}}Model) Count(filters map[string]interface{}) 
 
 
 func (m *{{.upperStartCamelObject}}Model) QuerySum(filters map[string]interface{},sumKey string) (num int, err error) {
-	bean := make([]*{{.upperStartCamelObject}}, 0)
-	columns, err := mysql.GetTableColumns(m.conn, bean)
+	columns, err := mysql.GetTableColumns(m.conn, m.table, &{{.upperStartCamelObject}}{})
 	if err != nil {
 		return
 	}
@@ -63,7 +60,7 @@ func (m *{{.upperStartCamelObject}}Model) QuerySum(filters map[string]interface{
 
 func (m *{{.upperStartCamelObject}}Model) Query(filters map[string]interface{}, sort []*model.SortSpec, limit int) (bean []*{{.upperStartCamelObject}}, err error) {
 	bean = make([]*{{.upperStartCamelObject}}, 0)
-	columns, err := mysql.GetTableColumns(m.conn, bean)
+	columns, err := mysql.GetTableColumns(m.conn, m.table, bean)
 	if err != nil {
 		return
 	}
@@ -73,6 +70,17 @@ func (m *{{.upperStartCamelObject}}Model) Query(filters map[string]interface{}, 
 		return
 	}
 	
+	{{if .status}}
+	if sort == nil || len(sort) == 0 {
+		sort = []*model.SortSpec{
+			{
+				Property: "{{.lowerStartCamelPrimaryKey}}",
+				Type: model.SortType_DSC,
+				IgnoreCase: false,
+			},
+		}
+	}
+	{{end}}
 	limit = mysql.LimitMax(limit)
 	sorts, err := mysql.BuildSort(sort, columns)
 	if err != nil {
@@ -90,10 +98,10 @@ func (m *{{.upperStartCamelObject}}Model) Query(filters map[string]interface{}, 
 
 
 func (m *{{.upperStartCamelObject}}Model)Page(query *model.PageQuery, bean *[]*{{.upperStartCamelObject}}) (page *model.Page, err error) {
-	if bean ==nil{
+	if bean == nil {
 		bean = &[]*{{.upperStartCamelObject}}{}
 	}
-	columns, err := mysql.GetTableColumns(m.conn, bean)
+	columns, err := mysql.GetTableColumns(m.conn, m.table, bean)
 	if err != nil {
 		return
 	}
@@ -103,6 +111,17 @@ func (m *{{.upperStartCamelObject}}Model)Page(query *model.PageQuery, bean *[]*{
 		return
 	}
 	
+	{{if .status}}
+	if query.Sort == nil || len(query.Sort) == 0 {
+		query.Sort = []*model.SortSpec{
+			{
+				Property: "{{.lowerStartCamelPrimaryKey}}",
+				Type: model.SortType_DSC,
+				IgnoreCase: false,
+			},
+		}
+	}
+	{{end}}
 	limit, offset := mysql.BuildLimit(query)
 	sorts, err := mysql.BuildSort(query.Sort, columns)
 	if err != nil {
@@ -139,7 +158,6 @@ func (m *{{.upperStartCamelObject}}Model)Page(query *model.PageQuery, bean *[]*{
 
 
 {{if .status}}
-
 func (m *{{.upperStartCamelObject}}Model) CursorAll(filters map[string]interface{}, sort []*model.SortSpec) (bean []*{{.upperStartCamelObject}}, err error) {
 	var cursor *model.Cursor
 	bean = make([]*{{.upperStartCamelObject}}, 0)
@@ -180,7 +198,7 @@ func (m *{{.upperStartCamelObject}}Model) Cursor(query *model.CursorQuery, bean 
 	if bean ==nil{
 		bean = &[]*{{.upperStartCamelObject}}{}
 	}
-	columns, err := mysql.GetTableColumns(m.conn, bean)
+	columns, err := mysql.GetTableColumns(m.conn, m.table, bean)
 
 	if query.CursorSort == nil || len(query.CursorSort) == 0 {
 		query.Direction = 0

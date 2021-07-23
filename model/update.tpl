@@ -36,7 +36,7 @@ func (m *{{.upperStartCamelObject}}Model) Update( data *{{.upperStartCamelObject
 
 func (m *{{.upperStartCamelObject}}Model) UpdateMapByWhere(filters map[string]interface{}, maps map[string]interface{}) (err error) {
 	bean := make([]*{{.upperStartCamelObject}}, 0)
-	columns, err := mysql.GetTableColumns(m.conn, bean)
+	columns, err := mysql.GetTableColumns(m.conn, m.table, bean)
 	if err != nil {
 		return
 	}
@@ -51,7 +51,7 @@ func (m *{{.upperStartCamelObject}}Model) UpdateMapByWhere(filters map[string]in
 
 func (m *{{.upperStartCamelObject}}Model) UpdateMapByWhereReCount(filters map[string]interface{}, maps map[string]interface{}) (updateNum int64, err error) {
 	bean := make([]*{{.upperStartCamelObject}}, 0)
-	columns, err := mysql.GetTableColumns(m.conn, bean)
+	columns, err := mysql.GetTableColumns(m.conn, m.table, bean)
 	if err != nil {
 		return
 	}
@@ -70,7 +70,7 @@ func (m *{{.upperStartCamelObject}}Model) UpdateMapByWhereReCount(filters map[st
 
 func (m *{{.upperStartCamelObject}}Model) UpdateDataByWhere(filters map[string]interface{}, data *{{.upperStartCamelObject}}) (err error) {
 	bean := make([]*{{.upperStartCamelObject}}, 0)
-	columns, err := mysql.GetTableColumns(m.conn, bean)
+	columns, err := mysql.GetTableColumns(m.conn, m.table, bean)
 	if err != nil {
 		return
 	}

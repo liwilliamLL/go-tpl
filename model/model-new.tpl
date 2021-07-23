@@ -8,7 +8,7 @@ func (t *{{.upperStartCamelObject}}Model) NextInt64Id() (int64, error) {
 func New{{.upperStartCamelObject}}Model(tableName string, conn *mysql.DataSource{{if .withRedis}}, rc *redis.Client{{end}}{{if .withCache}}, c cache.CacheConf{{end}}) (m *{{.upperStartCamelObject}}Model) {
 	m = &{{.upperStartCamelObject}}Model{
 		{{if .withCache}}CachedConn: sqlc.NewConn(conn, c){{else}}conn:conn{{end}},
-		table:      tableName,
+		table:      tableName, // {{.originTable}}
 		{{if .withRedis}}redisFlake: redisflake.NewFlakeNode(rc).SetNodeId("_t_" + tableName),{{end}}
 	}
 
