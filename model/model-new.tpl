@@ -9,7 +9,7 @@ func New{{.upperStartCamelObject}}Model(tableName string, conn *mysql.DataSource
 	m = &{{.upperStartCamelObject}}Model{
 		{{if .withCache}}CachedConn: sqlc.NewConn(conn, c){{else}}conn:conn{{end}},
 		table:      tableName,
-		{{if .withRedis}}redisFlake: redisflake.NewFlakeNode(rc).SetNodeId("_t_{{.originTable}}"),{{end}}
+		{{if .withRedis}}redisFlake: redisflake.NewFlakeNode(rc).SetNodeId("_t_" + tableName),{{end}}
 	}
 
 	{{if .withRedis -}}

@@ -9,7 +9,12 @@ import (
 
 type (
 	{{.upperStartCamelObject}}Dao struct {
-		{{.def_fields}}
+		{{range .fields -}}
+		{{.name}}Model                  *dto.{{.structName}}Model // {{.comment}}
+		{{end}}
+		{{if .withMerge}}
+		Tables map[string]*dto.{{ with $n := index .fields 0 }}{{ $n.structName }}{{ end }}Model
+		{{end}}
 	}
 )
 
@@ -24,7 +29,18 @@ func New{{.upperStartCamelObject}}Dao(config *mysql.Config{{if .withRedis}}, red
 		panic(err)
 	}
     {{end}}
-	return &{{.upperStartCamelObject}}Dao{
-		{{.fields}}
+	dao := &{{.upperStartCamelObject}}Dao{
+		{{range .fields -}}
+		{{.name}}Model: dto.New{{.structName}}Model("{{.tableName}}", dataSource{{if .withRedis}}, redisCli{{end}}),
+		{{end }}
 	}
+	{{if .withMerge}}
+	dao.Tables = map[string]*{{ with $n := index .fields 0 }}{{ $n.structName }}{{ end }}Model{
+		{{range .fields -}}
+		"{{.tableName}}": dao.{{.name}}Model,
+		{{end }}
+	}
+	{{end}}
+	
+	return dao
 }

@@ -56,7 +56,7 @@ func (m *{{.upperStartCamelObject}}Model) QuerySum(filters map[string]interface{
 	}
 
 
-	err = m.conn.GetEngine().Debug().Model(&{{.upperStartCamelObject}}{}).Where(cond, values...).Pluck("COALESCE(SUM("+sumKey+"), 0) as num", &num).Error
+	err = m.conn.GetEngine().Debug().Table(m.table).Where(cond, values...).Pluck("COALESCE(SUM("+sumKey+"), 0) as num", &num).Error
 	return
 }
 
