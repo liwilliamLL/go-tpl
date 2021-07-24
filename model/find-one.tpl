@@ -21,6 +21,7 @@ func (m *{{.upperStartCamelObject}}Model) FindOneByWhere(filters map[string]inte
 	if err != nil {
 		return
 	}
+	resp = &{{.upperStartCamelObject}}{}
 	err =  m.conn.GetEngine().Debug().Table(m.table).Where(cond, values...).First(resp).Error
 	return
 }
