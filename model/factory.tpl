@@ -13,7 +13,7 @@ type (
 		{{.name}}Model                  *dto.{{.structName}}Model // {{.comment}}
 		{{end}}
 		{{if .withMerge}}
-		Tables map[string]*dto.{{ with $n := index .fields 0 }}{{ $n.structName }}{{ end }}Model
+		tables map[string]*dto.{{ with $n := index .fields 0 }}{{ $n.structName }}{{ end }}Model
 		{{end}}
 	}
 )
@@ -35,7 +35,7 @@ func New{{.upperStartCamelObject}}Dao(config *mysql.Config{{if .withRedis}}, red
 		{{end }}
 	}
 	{{if .withMerge}}
-	dao.Tables = map[string]*dto.{{ with $n := index .fields 0 }}{{ $n.structName }}{{ end }}Model{
+	dao.tables = map[string]*dto.{{ with $n := index .fields 0 }}{{ $n.structName }}{{ end }}Model{
 		{{range .fields -}}
 		"{{.tableName}}": dao.{{.name}}Model,
 		{{end }}
@@ -44,3 +44,10 @@ func New{{.upperStartCamelObject}}Dao(config *mysql.Config{{if .withRedis}}, red
 	
 	return dao
 }
+
+{{if .withMerge}}
+func (d *{{.upperStartCamelObject}}Dao) GetModel(table string) (*dto.{{ with $n := index .fields 0 }}{{ $n.structName }}{{ end }}Model, bool){
+	m, ok := d.tables[table]
+	return m, ok
+}
+{{end}}
